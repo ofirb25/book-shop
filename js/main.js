@@ -6,30 +6,40 @@ var gBooks = [
         id: 0,
         title: 'Harry Potter',
         price: 21.5,
+        rating: 4,
+        rateCount: 1,
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc a efficitur est, sit amet volutpat elit. Curabitur id elementum tellus. Mauris vitae imperdiet sem, et interdum leo.'
     },
     {
         id: 1,
         title: 'Game of thrones',
         price: 21.5,
+        rating: 4,
+        rateCount: 1,
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc a efficitur est, sit amet volutpat elit. Curabitur id elementum tellus. Mauris vitae imperdiet sem, et interdum leo.'
     },
     {
         id: 2,
         title: 'Sky Walker',
         price: 99,
+        rating: 3,
+        rateCount: 1,
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc a efficitur est, sit amet volutpat elit. Curabitur id elementum tellus. Mauris vitae imperdiet sem, et interdum leo.'
     },
     {
         id: 3,
         title: 'The Great Escape',
         price: 59,
+        rating: 0,
+        rateCount: 2,
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc a efficitur est, sit amet volutpat elit. Curabitur id elementum tellus. Mauris vitae imperdiet sem, et interdum leo.'
     },
     {
         id: 4,
         title: 'Amazing Larisa',
         price: 38,
+        rating: 0,
+        rateCount: 0,
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc a efficitur est, sit amet volutpat elit. Curabitur id elementum tellus. Mauris vitae imperdiet sem, et interdum leo.'
     }
 ]
@@ -66,9 +76,20 @@ function showDetails(idx) {
     var book = gBooks[idx];
     var strHTML = `
         <div class="col-md-8">
-            <h2 class="modal-details-title">${book.title}</h2>
+            <h2 class="modal-details-title">${book.title}</h2>${book.rating}<i class="fa fa-star" aria-hidden="true" onclick="addRate(1,${book.id})" data-star="1"></i>
+            <div> 
+            Rate it now:
+            <i class="fa fa-star-o rate-star" aria-hidden="true" onclick="addRate(1,${book.id})" data-star="1"></i>
+            <i class="fa fa-star-o rate-star" aria-hidden="true" onclick="addRate(2,${book.id})" data-star="2"></i>
+            <i class="fa fa-star-o rate-star" aria-hidden="true" onclick="addRate(3,${book.id})" data-star="3"></i>
+            <i class="fa fa-star-o rate-star" aria-hidden="true" onclick="addRate(4,${book.id})" data-star="4"></i>
+            <i class="fa fa-star-o rate-star" aria-hidden="true" onclick="addRate(5,${book.id})" data-star="5"></i>
+            <i class="fa fa-check-circle-o got-rate" aria-hidden="true" style="color:green; display:none;"></i>
+            
+            </div>
             <p class="modal-details-title">${book.description}</p>
         </div>
+      
         <div class="modal-footer">
              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
        </div>
@@ -136,4 +157,24 @@ function renderAddBook() {
         </div>
         `
     document.querySelector('.modal-body').innerHTML = strHTML
+}
+
+function addRate(rate,idx) {
+    var elStars = document.querySelectorAll('.rate-star');
+    for (var i = 0; i < elStars.length; i++) {
+        var star = elStars[i];
+        star.classList.remove('fa','fa-star');
+        star.classList.add('fa','fa-star-o');  
+        star.setAttribute('onclick','return false')        
+    }
+    for (var i = 0; i < rate    ; i++) {
+        var star =elStars[i];
+        star.classList.remove('fa','fa-star-o');        
+        star.classList.add('fa','fa-star')
+    }
+    document.querySelector('.got-rate').style.display = 'inline';
+    gBooks[idx].rateCount++;
+    gBooks[idx].rating += +rate;
+    console.log(gBooks[idx].rating/gBooks[idx].rateCount)
+    gBooks[idx].rating = parseInt(gBooks[idx].rating/gBooks[idx].rateCount)
 }
