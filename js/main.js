@@ -74,9 +74,16 @@ function renderBooks() {
 
 function showDetails(idx) {
     var book = gBooks[idx];
+    var rating = null;
+    if (book.rating) {
+        rating = book.rating / book.rateCount + ''
+        rating = rating.substr(0, 3);        
+    } else rating = 0
+
+
     var strHTML = `
         <div class="col-md-8">
-            <h2 class="modal-details-title">${book.title}</h2>${book.rating}<i class="fa fa-star" aria-hidden="true" onclick="addRate(1,${book.id})" data-star="1"></i>
+            <h2 class="modal-details-title">${book.title}</h2>${rating}<i class="fa fa-star" aria-hidden="true" onclick="addRate(1,${book.id})" data-star="1"></i>
             <div> 
             Rate it now:
             <i class="fa fa-star-o rate-star" aria-hidden="true" onclick="addRate(1,${book.id})" data-star="1"></i>
@@ -118,6 +125,7 @@ function renderUpdateBook(idx) {
 }
 
 function saveChanges(idx) {
+
     var title = document.querySelector('.modal-book-title').value
     var price = document.querySelector('.modal-book-price').value
     var description = document.querySelector('.modal-book-desc').value;
@@ -127,9 +135,17 @@ function saveChanges(idx) {
         price: price,
         description: description
     }
-    if (idx) gBooks[idx] = book;
+    if (idx) {
+        book.rating = gBooks[idx].rating;
+        book.rateCount = gBooks[idx].rateCount;
+        gBooks[idx] = book;
+
+    }
     else {
+        book.rating = 0;
+        book.rateCount = 0;
         book.id = ++gLastBookId;
+        console.log(book)
         gBooks.push(book);
     }
     renderBooks();
@@ -159,22 +175,20 @@ function renderAddBook() {
     document.querySelector('.modal-body').innerHTML = strHTML
 }
 
-function addRate(rate,idx) {
+function addRate(rate, idx) {
     var elStars = document.querySelectorAll('.rate-star');
     for (var i = 0; i < elStars.length; i++) {
         var star = elStars[i];
-        star.classList.remove('fa','fa-star');
-        star.classList.add('fa','fa-star-o');  
-        star.setAttribute('onclick','return false')        
+        star.classList.remove('fa', 'fa-star');
+        star.classList.add('fa', 'fa-star-o');
+        star.setAttribute('onclick', 'return false')
     }
-    for (var i = 0; i < rate    ; i++) {
-        var star =elStars[i];
-        star.classList.remove('fa','fa-star-o');        
-        star.classList.add('fa','fa-star')
+    for (var i = 0; i < rate; i++) {
+        var star = elStars[i];
+        star.classList.remove('fa', 'fa-star-o');
+        star.classList.add('fa', 'fa-star')
     }
     document.querySelector('.got-rate').style.display = 'inline';
     gBooks[idx].rateCount++;
-    gBooks[idx].rating += +rate;
-    console.log(gBooks[idx].rating/gBooks[idx].rateCount)
-    gBooks[idx].rating = parseInt(gBooks[idx].rating/gBooks[idx].rateCount)
+    gBooks[idx].rating = gBooks[idx].rating + rate;
 }
