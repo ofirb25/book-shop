@@ -1,0 +1,19 @@
+.hidden {
+    display: none;
+}
+
+@media (min-width: 576px){
+.modal-dialog {
+    max-width: 50vw;
+    height:100%;
+    margin: 30px auto;
+    }
+}
+
+.add-new {
+    margin-bottom:10px;
+}
+
+body > .container {
+    margin-top:30px;
+}
